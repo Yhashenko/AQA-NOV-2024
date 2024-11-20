@@ -13,9 +13,13 @@ public class Main {
         carGreen.color = "green";
         carYellow.color = "yellow";
 
-        carRed.goTo("Dnipro");
-        carGreen.goTo("Kyiv");
-        carYellow.goTo("Odessa");
+        System.out.println(carRed.hashCode());
+        System.out.println(carGreen.hashCode());
+        System.out.println(carYellow.hashCode());
+
+//        carRed.goTo("Dnipro");
+//        carGreen.goTo("Kyiv");
+//        carYellow.goTo("Odessa");
 
 //        System.out.println("Car #1 color is " + carRed.color);
 //        System.out.println("Car #2 color is " + carGreen.color);

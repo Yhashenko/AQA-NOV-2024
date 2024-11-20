@@ -3,6 +3,30 @@ package org.prog.cars;
 public class Car {
 
     public String color;
+    public String ownerName;
+
+    @Override
+    public String toString() {
+        return color + " car belongs to " + ownerName;
+    }
+
+    @Override
+    public int hashCode() {
+        //"red"+"John" => "redJohn"
+        return (color + ownerName).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Car) {
+            Car c = (Car) obj;
+            boolean carColorsAreTheSame = this.color.equals(c.color) &&
+                    this.ownerName.equals(c.ownerName);
+            return carColorsAreTheSame;
+        }
+        return false;
+    }
+
 
     public void goTo(String destination) {
         goTo(destination, "current location");
