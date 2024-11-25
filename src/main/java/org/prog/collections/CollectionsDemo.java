@@ -5,53 +5,79 @@ package org.prog.collections;
 // - owners can have several cars
 // - list cars belonging to specific owner
 
-import org.prog.cars.Car;
-
 import java.util.*;
 
 public class CollectionsDemo {
 
     //TODO: Homework 1: add owners list ad parameter for addCarToCompany;
-    //TODO*: Do only if you want! Make owners random! WARNING: make list of owers to pick from
+    //TODO*: Do only if you want! Make owners random! WARNING: make list of owners to pick from
 
     public static void main(String[] args) {
         Map<Car, List<String>> carsAndOwners = new HashMap<>();
-        addCarToCompany(carsAndOwners, "black");
-        addCarToCompany(carsAndOwners, "white");
-        addCarToCompany(carsAndOwners, "red");
-        addCarToCompany(carsAndOwners, "blue");
+        List<String> availableOwners = Arrays.asList("John", "Jane", "Denis", "Molly", "Charlie");
+        List<String> availableBrands = Arrays.asList("Mazda", "Tesla", "BMW", "Suzuki", "Hyundai");
 
-        String requestedOwnerName = "John";
-        Set<Car> carsOwnedBySpecificPerson = findCars(carsAndOwners, requestedOwnerName);
+        addCarToCompany(carsAndOwners, "black", availableOwners, availableBrands);
+        addCarToCompany(carsAndOwners, "white", availableOwners, availableBrands);
+        addCarToCompany(carsAndOwners, "red", availableOwners, availableBrands);
+        addCarToCompany(carsAndOwners, "blue", availableOwners, availableBrands);
 
-        for (Car c : carsOwnedBySpecificPerson) {
-            System.out.println(c);
-        }
-    }
-
-    public static void addCarToCompany(Map<Car, List<String>> carsAndOwners,
-                                       String color) {
-        Car car = new Car();
-        car.color = color;
-        carsAndOwners.put(car, new ArrayList<>());
-        carsAndOwners.get(car).add("John");
-        carsAndOwners.get(car).add("Jane");
-    }
-
-    public static Set<Car> findCars(Map<Car, List<String>> carsAndOwners, String requestedOwnerName) {
-        Set<Car> carsOwnedBySpecificPerson = new HashSet<>();
-        Iterator<Map.Entry<Car, List<String>>> iterator =
-                carsAndOwners.entrySet().iterator();
-
-        while (iterator.hasNext()) {
-            Map.Entry<Car, List<String>> entry = iterator.next();
-            Car carrUnderInspection = entry.getKey();
+        for (Map.Entry<Car, List<String>> entry : carsAndOwners.entrySet()) {
+            Car car = entry.getKey();
             List<String> owners = entry.getValue();
-            if (owners.contains(requestedOwnerName)) {
-                carsOwnedBySpecificPerson.add(carrUnderInspection);
-            }
+            System.out.println("Car: " + availableBrands + " is owned by: " + owners);
+        }
+    }
+
+
+    public static void addCarToCompany(Map<Car, List<String>> carsAndOwners, String color, List<String> availableOwners, List<String> availableBrands) {
+
+        Car car = new Car();
+        car.setColor(color);
+
+
+        Random rand = new Random();
+        int numOwners = rand.nextInt(3) + 1;  // Random number between 1 and 3 owners
+        Set<String> randomOwners = new HashSet<>();
+
+
+        while (randomOwners.size() < numOwners) {
+            randomOwners.add(availableOwners.get(rand.nextInt(availableOwners.size())));
         }
 
-        return carsOwnedBySpecificPerson;
+
+        carsAndOwners.put(car, new ArrayList<>(randomOwners));
+    }
+
+
+    public static class Car {
+        private String color;
+
+
+        public void setColor(String color) {
+            this.color = color;
+        }
+
+        public String getColor() {
+            return color;
+        }
+
+        @Override
+        public String toString() {
+            return "Car{color='" + color + "'}";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Car car = (Car) o;
+            return Objects.equals(color, car.color);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(color);
+        }
     }
 }
