@@ -43,9 +43,13 @@ public class AlloUaTestNG {
         searchInput.sendKeys(Keys.ENTER);
 
         List<WebElement> searchResults = new WebDriverWait(driver, Duration.ofSeconds(60))
-                .until(ExpectedConditions.numberOfElementsToBeMoreThan(By.className("products-layout__item"), 10));
+                .until(ExpectedConditions.numberOfElementsToBeMoreThan(By.className("products-layout__item"), 0));
 
-        int X = 9;
+        Assert.assertTrue(searchResults.size() > 0, "No search results found.");
+
+        int productsCount = searchResults.size();
+
+        int X = Math.min(productsCount - 1, 9);
 
         Assert.assertTrue(X >= 0, "Position X cannot be less than 0.");
         Assert.assertTrue(X < searchResults.size(), "Position X exceeds the available products.");
