@@ -5,9 +5,9 @@ import io.cucumber.testng.CucumberOptions;
 import lombok.SneakyThrows;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.prog.cucumber.steps.GoogleSteps;
+import org.prog.cucumber.steps.AlloUaSteps;
+import org.prog.selenium.pages.AlloUaPage;
 import org.prog.cucumber.steps.SQLSteps;
-import org.prog.selenium.pages.GooglePage;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
@@ -34,7 +34,7 @@ public class CucumberRunner extends AbstractTestNGCucumberTests {
                 ("jdbc:mysql://localhost:3306/db", "user", "password");
 
         driver = new ChromeDriver();
-        GoogleSteps.googlePage = new GooglePage(driver);
+        AlloUaSteps.alloUaPage = new AlloUaPage(driver);
         SQLSteps.connection = connection;
     }
 

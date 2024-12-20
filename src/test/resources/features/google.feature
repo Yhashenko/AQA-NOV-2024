@@ -1,12 +1,12 @@
-Feature: Test google search
+Feature: Test allo.ua search
 
-  Scenario: search for celebrity
-    Given I request 3 random people from random user service
-    Given I store those people to database
-    When I request database for a random person
-    Then I can see that person's name
-    Given I load google page
-    And I accept Google cookies if present
-    When I search for random person
+  Scenario: search for iphone
+    Given I request 3 random phones from allo.ua website
+    Given I store those phones to database
+    When I request database for a random phone
+    Then I can see that phone's name
+    Given I load allo.ua page
+    When I request for 3 random phones from allo.ua website
     Then I can see at least 3 search results
+
 

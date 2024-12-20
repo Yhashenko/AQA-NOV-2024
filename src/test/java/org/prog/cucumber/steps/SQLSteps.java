@@ -1,50 +1,72 @@
 package org.prog.cucumber.steps;
 
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
 import org.prog.selenium.dto.PersonDto;
+import org.prog.selenium.dto.PhoneDto;
 import org.testng.Assert;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SQLSteps {
 
-    public static final List<PersonDto> RANDOM_PERSONS = new ArrayList<>();
-
-    public static String RANDOM_PERSON;
+    public static List<PhoneDto> RANDOM_PHONES = new ArrayList<>();
 
     public static Connection connection;
+    @Before
+    public void setUp() throws SQLException {
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/db", "user", "password");
+            System.out.println("Database connection established successfully!");
+        } catch (SQLException e) {
+            System.err.println("Failed to establish database connection: " + e.getMessage());
+            throw e;  // Re-throw the exception to propagate it upwards
+        }
+    }
 
-    @Given("I store those people to database")
-    public void storeRandomUsersToDatabase() throws SQLException {
-        String insertStatement = "INSERT INTO Persons (FirstName, LastName, Gender, Title, Nat) VALUES (?, ?, ?, ?, ?)";
+    @After
+    public void tearDown() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
+            System.out.println("Database connection closed successfully!");
+        }
+    }
+
+    @Given("I store those phones to database")
+    public void storeRandomPhonesToDatabase() throws SQLException {
+        String insertStatement = "INSERT INTO Phones (PhoneName, GoodsId) VALUES (?, ?)";
         PreparedStatement preparedStatement = connection.prepareStatement(insertStatement);
-        for (PersonDto personDto : RANDOM_PERSONS) {
-            preparedStatement.setString(1, personDto.getName().getFirst());
-            preparedStatement.setString(2, personDto.getName().getLast());
-            preparedStatement.setString(3, personDto.getGender());
-            preparedStatement.setString(4, personDto.getName().getTitle());
-            preparedStatement.setString(5, personDto.getNat());
+
+        for (PhoneDto phoneDto : SQLSteps.RANDOM_PHONES) {
+            preparedStatement.setString(1, phoneDto.getPhoneName());
+            preparedStatement.setString(2, phoneDto.getGoodsId());
             try {
                 preparedStatement.execute();
             } catch (Exception e) {
-                System.err.println("Failed to save user " + personDto.getName().getFirst() + " " + personDto.getName().getLast());
+                System.err.println("Failed to save phone " + phoneDto.getPhoneName() + " " + phoneDto.getGoodsId());
             }
         }
     }
 
-    @Given("I request database for a random person")
-    public void getRandomPersonFromDB() throws SQLException {
-        String selectStatement = "select * from Persons ORDER BY RAND() limit 1";
+    @When("I request database for a random phone")
+    public void getRandomPhoneFromDB() throws SQLException {
+        String selectStatement = "SELECT * FROM Phones ORDER BY RAND() LIMIT 1";
         PreparedStatement preparedStatement = connection.prepareStatement(selectStatement);
-        ResultSet resultSet = preparedStatement.executeQuery(selectStatement);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
         if (resultSet.next()) {
-            RANDOM_PERSON = resultSet.getString("FirstName") + " " + resultSet.getString("LastName");
+            String phoneName = resultSet.getString("PhoneName");
+            String goodsId = resultSet.getString("GoodsId");
+
+            PhoneDto phoneDto = new PhoneDto(phoneName, goodsId);
+            RANDOM_PHONES.clear();
+            RANDOM_PHONES.add(phoneDto);
         }
-        Assert.assertNotNull(RANDOM_PERSON, "No random person found!");
+
+        Assert.assertFalse(RANDOM_PHONES.isEmpty(), "No random phone found!");
     }
 }

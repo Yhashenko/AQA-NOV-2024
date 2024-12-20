@@ -9,9 +9,9 @@ import java.util.Set;
 
 public class DataSteps {
 
-    @Then("I can see that person's name")
-    public void printRandomPersonsName() {
-        System.out.println(SQLSteps.RANDOM_PERSON);
+    @Then("I can see that phone's name")
+    public void printRandomPhonesName() {
+        System.out.println(SQLSteps.RANDOM_PHONES);
     }
 
     @Given("I print a String {string}")
