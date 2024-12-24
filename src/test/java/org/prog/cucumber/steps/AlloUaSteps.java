@@ -35,22 +35,25 @@ public class AlloUaSteps {
     public void requestRandomPhones() {
         String[] phones = {"iPhone 13", "iPhone 15", "iPhone 16"};
         randomPhone = phones[new Random().nextInt(phones.length)];
-        alloUaPage.setSearchInputText(randomPhone);
+        alloUaPage.setSearchValue(randomPhone);
         alloUaPage.executeSearch();
     }
 
     @Then("I can see at least {int} search results")
     public void validateAlloUaSearchResultsCount(int amount) {
-
         List<WebElement> searchHeaders = alloUaPage.getSearchHeaders();
+
+        if (searchHeaders.isEmpty()) {
+            Assert.fail("No search results found for " + randomPhone);
+        }
 
         long count = searchHeaders.stream()
                 .filter(header -> header.getText().contains(randomPhone))
                 .count();
 
-        Assert.assertTrue(count >= amount,
-                "Expected at least " + amount + " search results, but found " + count);
+        Assert.assertTrue(count >= amount, "Expected at least " + amount + " search results, but found " + count);
     }
+
 
     @After
     public void tearDown() throws SQLException {

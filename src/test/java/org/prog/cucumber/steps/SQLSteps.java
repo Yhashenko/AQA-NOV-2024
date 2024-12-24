@@ -4,7 +4,6 @@ import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
-import org.prog.selenium.dto.PersonDto;
 import org.prog.selenium.dto.PhoneDto;
 import org.testng.Assert;
 
@@ -24,7 +23,7 @@ public class SQLSteps {
             System.out.println("Database connection established successfully!");
         } catch (SQLException e) {
             System.err.println("Failed to establish database connection: " + e.getMessage());
-            throw e;  // Re-throw the exception to propagate it upwards
+            throw e;
         }
     }
 

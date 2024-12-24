@@ -1,7 +1,6 @@
 Feature: Test allo.ua search
 
   Scenario: search for iphone
-    Given I request 3 random phones from allo.ua website
     Given I store those phones to database
     When I request database for a random phone
     Then I can see that phone's name
